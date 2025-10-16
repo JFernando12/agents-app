@@ -12,10 +12,41 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
   const [agents, setAgents] = useState<Agent[]>(initialAgents);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
 
-  const handleSaveNew = (newAgent: Agent | Omit<Agent, "id">) => {};
+  const handleSaveNew = async (newAgent: Agent | Omit<Agent, 'id'>) => {
+    console.log('Create:: ', newAgent);
+    const response = await fetch('/api/agents', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newAgent),
+    });
+    const data = await response.json();
+    console.log('Created Agent:', data);
+    setAgents((prev) => [...prev, data]);
+    setIsCreateModalOpen(false);
+  };
 
-  const handleSaveEdit = (newAgent: Agent | Omit<Agent, "id">) => {
-    console.log("Edit", newAgent);
+  const handleSaveEdit = async (newAgent: Agent | Omit<Agent, 'id'>) => {
+    console.log('Edit:: ', newAgent);
+    if (!('id' in newAgent)) return;
+
+    const response = await fetch(`/api/agent/${newAgent.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newAgent),
+    });
+    const data = await response.json();
+    console.log('Updated Agent:', data);
+
+    setAgents((prev) =>
+      prev.map((agent) => (agent.id === data.id ? data : agent))
+    );
+
+    setIsEditModalOpen(false);
+    setSelectedAgent(null);
   };
 
   const onCreate = () => {
