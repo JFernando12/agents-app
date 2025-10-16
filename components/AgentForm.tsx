@@ -61,6 +61,8 @@ const AgentForm: React.FC<AgentFormProps> = ({
       name
     );
 
+    console.log('Name:', name, 'Value:', value);
+
     setAgentData((prev) => ({
       ...prev,
       [name]: isNumberField ? Number(value) : value,

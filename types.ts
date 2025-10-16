@@ -21,6 +21,16 @@ export interface Agent {
   maxTokens: number;
 }
 
+export type Fuente = {
+  id: number;
+  name: string;
+  category: "oficial" | "interno";
+  active: boolean;
+  lastUpdated: string;
+  medio: string;
+  link: string;
+};
+
 export interface LogEntry {
   id: string;
   user: string;

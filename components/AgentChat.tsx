@@ -31,7 +31,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ agent }) => {
     //             model: agent.model,
     //             contents: input,
     //             config: {
-    //                 systemInstruction: agent.masterPrompt,
+    //                 systemInstruction: agent.customPrompt,
     //                 temperature: agent.temperature,
     //                 topK: agent.topK,
     //                 topP: agent.topP,

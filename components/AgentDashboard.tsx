@@ -5,6 +5,7 @@ import AgentList from "./AgentList";
 import { PlusIcon } from "./icons";
 import Modal from "./Modal";
 import AgentForm from "./AgentForm";
+import { apiAgents } from "@/lib/api/agents";
 
 const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -14,14 +15,8 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
 
   const handleSaveNew = async (newAgent: Agent | Omit<Agent, 'id'>) => {
     console.log('Create:: ', newAgent);
-    const response = await fetch('/api/agents', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newAgent),
-    });
-    const data = await response.json();
+    const response = await apiAgents.createAgent(newAgent as Omit<Agent, 'id'>);
+    const data = response;
     console.log('Created Agent:', data);
     setAgents((prev) => [...prev, data]);
     setIsCreateModalOpen(false);
@@ -31,14 +26,8 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
     console.log('Edit:: ', newAgent);
     if (!('id' in newAgent)) return;
 
-    const response = await fetch(`/api/agent/${newAgent.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newAgent),
-    });
-    const data = await response.json();
+    const response = await apiAgents.updateAgent(newAgent.id, newAgent as Omit<Agent, 'id'>);
+    const data = response;
     console.log('Updated Agent:', data);
 
     setAgents((prev) =>

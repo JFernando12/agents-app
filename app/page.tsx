@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import TabsLayout from "@/components/TabsLayout";
-import { getAgents } from "@/lib/api/agents";
+import { apiAgents } from "@/lib/api/agents";
 import { LogEntry } from "@/types";
 
 const initialChangelog: LogEntry[] = [
@@ -53,7 +53,7 @@ const initialChangelog: LogEntry[] = [
 ];
 
 export default async function Home() {
-  const agents = await getAgents();
+  const agents = await apiAgents.getAgents();
 
   return (
     <div className="min-h-screen bg-[#F7F8FA]">

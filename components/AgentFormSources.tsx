@@ -1,16 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from './icons';
-import { Agent } from '@/types';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from "./icons";
+import { Agent, Fuente } from "@/types";
+import { apiDocuments } from "@/lib/api/documents";
 
-export type Fuente = {
-  id: number;
-  name: string;
-  category: 'oficial' | 'interno';
-  active: boolean;
-  lastUpdated: string;
-  medio: string;
-  link: string;
-};
+
 
 interface AgentFormSourcesProps {
   agent: Agent | null;
@@ -19,30 +12,23 @@ interface AgentFormSourcesProps {
 const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const [selectedFuenteId, setSelectedFuenteId] = useState<number | null>(null);
   const [fuentes, setFuentes] = useState<Fuente[]>([]);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [newFileData, setNewFileData] = useState<{
-    name: string;
-    category: 'oficial' | 'interno';
-    medio: string;
-    link: string;
-  } | null>(null);
 
   const selectedFuente = useMemo(() => {
     return fuentes.find((f) => f.id === selectedFuenteId) || null;
   }, [selectedFuenteId, fuentes]);
 
   useEffect(() => {
+
     const getDocuments = async () => {
       if (!agent) return;
-      const response = await fetch(`/api/documents?serviceId=${agent.id}`);
-      const { documents } = await response.json();
-      console.log('Fetched documents:', documents);
+      const documents = await apiDocuments.getDocuments(agent.id);
+      console.log("Fetched documents:", documents);
       setFuentes(documents);
     };
+
     getDocuments();
-  }, []);
+  }, [agent]);
 
   const handleToggleFuente = (id: number) => {
     setFuentes(
@@ -50,18 +36,13 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
     );
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setNewFileData({
-        name: file.name,
-        category: 'oficial',
-        medio: '',
-        link: '',
-      });
-      setIsUploadModalOpen(true);
-      e.target.value = ''; // Reset file input
-    }
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!agent?.id) return;
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+    console.log("Selected file:", file);
+
+    await apiDocuments.uploadDocument({ serviceId: agent.id, file })
   };
 
   const renderFuenteItem = (fuente: Fuente) => (
@@ -70,8 +51,8 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
       onClick={() => setSelectedFuenteId(fuente.id)}
       className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
         selectedFuenteId === fuente.id
-          ? 'bg-[#374151] text-white'
-          : 'hover:bg-[#2d3748]'
+          ? "bg-[#374151] text-white"
+          : "hover:bg-[#2d3748]"
       }`}
     >
       <span className="truncate text-sm">{fuente.name}</span>
@@ -88,12 +69,12 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
             type="button"
             onClick={() => handleToggleFuente(fuente.id)}
             className={`${
-              fuente.active ? 'bg-blue-600' : 'bg-gray-600'
+              fuente.active ? "bg-blue-600" : "bg-gray-600"
             } relative inline-flex items-center h-4 rounded-full w-8 transition-colors`}
           >
             <span
               className={`${
-                fuente.active ? 'translate-x-5' : 'translate-x-1'
+                fuente.active ? "translate-x-5" : "translate-x-1"
               } inline-block w-3 h-3 transform bg-white rounded-full transition-transform`}
             />
           </button>
@@ -115,10 +96,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
         <div className="w-1/2 flex flex-col gap-4">
           <div className="bg-[#232A37] text-white p-3 rounded-lg">
             <h4 className="font-bold text-md mb-2">Documentos</h4>
-            <div className="space-y-1">
-              {fuentes
-                .map(renderFuenteItem)}
-            </div>
+            <div className="space-y-1">{fuentes.map(renderFuenteItem)}</div>
           </div>
         </div>
         <div className="w-1/2 flex h-full">
