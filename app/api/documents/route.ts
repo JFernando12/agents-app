@@ -22,7 +22,17 @@ export async function GET(request: Request) {
     }
   );
   const data = await response.json();
-  console.log("Fetched service data:", data);
 
-  return NextResponse.json(data.documents);
+  const formattedDocuments = data.documents.map((doc: any) => ({
+    id: doc.id,
+    name: doc.file_name,
+    type: doc.type,
+    createdAt: new Date(doc.created_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    }),
+  }));
+
+  return NextResponse.json({ documents: formattedDocuments });
 }

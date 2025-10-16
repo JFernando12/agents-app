@@ -24,7 +24,9 @@ const AgentCard: React.FC<AgentCardProps> = ({
           <AgentIcon name={agent.icon} className="w-8 h-8 mr-3" />
           <h2 className="text-xl font-semibold text-white">{agent.name}</h2>
         </div>
-        <p className="text-gray-400 text-sm mb-4">{agent.description}</p>
+        <p className="text-gray-400 text-sm mb-4 truncate">
+          {agent.description}
+        </p>
       </div>
       <div className="flex justify-end space-x-2">
         <button

@@ -11,16 +11,7 @@ const AgentChat: React.FC<AgentChatProps> = ({ agent }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages, isLoading]);
 
     // const handleSendMessage = async (e: React.FormEvent) => {
     //     e.preventDefault();

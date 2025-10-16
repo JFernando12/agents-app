@@ -7,7 +7,6 @@ export const getAgents = async () => {
         }
     })
     const data = await response.json();
-    console.log('Fetched agents data:', data.services[0]);
     const formattedData = data.services.map((service: any) => ({
         id: service.id,
         name: service.name,
