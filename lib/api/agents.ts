@@ -9,6 +9,7 @@ class ApiAgents extends ApiService {
   getAgents = async (): Promise<Agent[]> => {
     const response = await this.api.get("/services");
     const data = response.data;
+    console.log('Fetched agents data:', data);
     const formattedData = data.services.map((service: any) => ({
       id: service.id,
       name: service.name,

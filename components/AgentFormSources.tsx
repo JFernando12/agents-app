@@ -1,17 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from "./icons";
-import { Agent, Fuente } from "@/types";
-import { apiDocuments } from "@/lib/api/documents";
-
-
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from './icons';
+import { Agent, Fuente } from '@/types';
+import { apiDocuments } from '@/lib/api/documents';
 
 interface AgentFormSourcesProps {
   agent: Agent | null;
 }
 
+const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+const formControlClass =
+  'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232A37] text-gray-700';
+
 const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const [selectedFuenteId, setSelectedFuenteId] = useState<number | null>(null);
   const [fuentes, setFuentes] = useState<Fuente[]>([]);
+  const [newFileData, setNewFileData] = useState<{
+    file: File;
+    name: string;
+    category: 'oficial' | 'interno';
+    medio: string;
+    link: string;
+  } | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const selectedFuente = useMemo(() => {
@@ -19,11 +29,10 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   }, [selectedFuenteId, fuentes]);
 
   useEffect(() => {
-
     const getDocuments = async () => {
       if (!agent) return;
       const documents = await apiDocuments.getDocuments(agent.id);
-      console.log("Fetched documents:", documents);
+      console.log('Fetched documents:', documents);
       setFuentes(documents);
     };
 
@@ -40,9 +49,29 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
     if (!agent?.id) return;
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
-    console.log("Selected file:", file);
+    console.log('Selected file:', file);
 
-    await apiDocuments.uploadDocument({ serviceId: agent.id, file })
+    setNewFileData({
+      file,
+      name: file.name,
+      category: 'oficial',
+      medio: '',
+      link: '',
+    });
+  };
+
+  const handleSaveNewFuente = async () => {
+    if (!agent?.id || !newFileData) return;
+    await apiDocuments.uploadDocument({
+      serviceId: agent.id,
+      data: {
+        file: newFileData.file,
+        name: newFileData.name,
+        category: newFileData.category,
+        medio: newFileData.medio,
+        link: newFileData.link,
+      },
+    });
   };
 
   const renderFuenteItem = (fuente: Fuente) => (
@@ -51,8 +80,8 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
       onClick={() => setSelectedFuenteId(fuente.id)}
       className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
         selectedFuenteId === fuente.id
-          ? "bg-[#374151] text-white"
-          : "hover:bg-[#2d3748]"
+          ? 'bg-[#374151] text-white'
+          : 'hover:bg-[#2d3748]'
       }`}
     >
       <span className="truncate text-sm">{fuente.name}</span>
@@ -69,12 +98,12 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
             type="button"
             onClick={() => handleToggleFuente(fuente.id)}
             className={`${
-              fuente.active ? "bg-blue-600" : "bg-gray-600"
+              fuente.active ? 'bg-blue-600' : 'bg-gray-600'
             } relative inline-flex items-center h-4 rounded-full w-8 transition-colors`}
           >
             <span
               className={`${
-                fuente.active ? "translate-x-5" : "translate-x-1"
+                fuente.active ? 'translate-x-5' : 'translate-x-1'
               } inline-block w-3 h-3 transform bg-white rounded-full transition-transform`}
             />
           </button>
@@ -99,26 +128,126 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
             <div className="space-y-1">{fuentes.map(renderFuenteItem)}</div>
           </div>
         </div>
-        <div className="w-1/2 flex h-full">
-          <div
-            className="w-full h-full bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col justify-center items-center text-center p-4 cursor-pointer hover:border-gray-400 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <UploadIcon className="w-12 h-12 text-gray-400 mb-2" />
-            <p className="font-semibold text-gray-600">
-              Cargar nuevo documento:
-            </p>
-            <p className="text-sm text-gray-500">
-              Coloca aquí el archivo o da clic para buscarlo
-            </p>
+
+        {!newFileData && (
+          <div className="w-1/2 flex h-full">
+            <div
+              className="w-full h-full bg-white border-2 border-dashed border-gray-300 rounded-lg flex flex-col justify-center items-center text-center p-4 cursor-pointer hover:border-gray-400 transition-colors"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <UploadIcon className="w-12 h-12 text-gray-400 mb-2" />
+              <p className="font-semibold text-gray-600">
+                Cargar nuevo documento:
+              </p>
+              <p className="text-sm text-gray-500">
+                Coloca aquí el archivo o da clic para buscarlo
+              </p>
+            </div>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </div>
+        )}
+
+        {newFileData && (
+          <div className="flex justify-center items-center border border-gray-300 rounded-lg w-1/2">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="space-y-3">
+                <div>
+                  <label className={labelClass}>Nombre del archivo</label>
+                  <input
+                    type="text"
+                    value={newFileData.name}
+                    className="w-full bg-gray-100 p-2 rounded border border-gray-300 text-gray-700"
+                    onChange={(e) =>
+                      setNewFileData((d) =>
+                        d ? { ...d, name: e.target.value } : null
+                      )
+                    }
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Categoría</label>
+                  <div className="flex space-x-4">
+                    <label>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="oficial"
+                        checked={newFileData.category === 'oficial'}
+                        onChange={(e) =>
+                          setNewFileData((d) =>
+                            d ? { ...d, category: e.target.value as any } : null
+                          )
+                        }
+                        className="mr-1"
+                      />
+                      <p className="inline text-gray-700">Oficial</p>
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="category"
+                        value="interno"
+                        checked={newFileData.category === 'interno'}
+                        onChange={(e) =>
+                          setNewFileData((d) =>
+                            d ? { ...d, category: e.target.value as any } : null
+                          )
+                        }
+                        className="mr-1"
+                      />
+                      <p className="inline text-gray-700">Interno</p>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className={labelClass}>Medio de obtención</label>
+                  <input
+                    type="text"
+                    value={newFileData.medio}
+                    onChange={(e) =>
+                      setNewFileData((d) =>
+                        d ? { ...d, medio: e.target.value } : null
+                      )
+                    }
+                    className={formControlClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>Link de publicación</label>
+                  <input
+                    type="text"
+                    value={newFileData.link}
+                    onChange={(e) =>
+                      setNewFileData((d) =>
+                        d ? { ...d, link: e.target.value } : null
+                      )
+                    }
+                    className={formControlClass}
+                  />
+                </div>
+                <div className="flex justify-center space-x-2 pt-3">
+                  <button
+                    onClick={() => setNewFileData(null)}
+                    className="px-4 py-2 bg-gray-200 rounded text-gray-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSaveNewFuente}
+                    className="px-4 py-1 bg-green-600 text-white rounded"
+                  >
+                    Guardar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {selectedFuente && (

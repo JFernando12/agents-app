@@ -84,6 +84,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
 
   return (
     <div className="flex flex-col md:flex-row gap-6 md:gap-8 min-h-0">
+      {/* Configuracion */}
       <div className="w-full md:w-2/3 lg:w-3/5 flex flex-col">
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex-shrink-0 flex space-x-2 mb-4 border-b pb-4">
@@ -138,6 +139,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
           </div>
         </form>
       </div>
+      {/* Agente Chat */}
       <div className="w-full md:w-1/3 lg:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-6 flex flex-col">
         <AgentChat agent={agentData} />
       </div>
