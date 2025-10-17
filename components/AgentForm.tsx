@@ -112,19 +112,22 @@ const AgentForm: React.FC<AgentFormProps> = ({
             </div>
           )}
 
-          <div className="flex-1 overflow-y-auto mb-4 pr-4 custom-scrollbar min-h-0">
-            {activeTab === "general" && (
+          {activeTab === "general" && (
+            <div className="flex-1 overflow-y-auto mb-4 pr-4 custom-scrollbar min-h-0">
               <AgentFormGeneral
                 agent={agentData}
                 handleChange={handleChange}
                 handleIconSelect={handleIconSelect}
               />
-            )}
-            {activeTab === "fuentes" && (
-              <AgentFormSources agent={agentToEdit} />
-            )}
-            {activeTab === "integracion" && <AgentFormIntegration />}
-          </div>
+            </div>
+          )}
+          {activeTab === "fuentes" && <AgentFormSources agent={agentToEdit} />}
+
+          {activeTab === "integracion" && (
+            <div className="flex-1 overflow-y-auto mb-4 pr-4 custom-scrollbar min-h-0">
+              <AgentFormIntegration />)
+            </div>
+          )}
 
           <div className="pt-4 border-t border-gray-200 w-full flex justify-end space-x-3">
             <button
