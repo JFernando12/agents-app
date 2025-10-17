@@ -83,10 +83,10 @@ const AgentForm: React.FC<AgentFormProps> = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 md:gap-8 min-h-0">
+    <div className="flex flex-row gap-3 h-full">
       {/* Configuracion */}
-      <div className="w-full md:w-2/3 lg:w-3/5 flex flex-col">
-        <form onSubmit={handleSubmit} className="flex flex-col">
+      <div className="w-2/3 flex flex-col min-h-0">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="flex-shrink-0 flex space-x-2 mb-4 border-b pb-4">
             {(['general', 'fuentes', 'integracion'] as const).map((tab) => (
               <button
@@ -108,7 +108,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
             ))}
           </div>
 
-          <div className="mb-4">
+          <div className="flex-1 overflow-y-auto mb-4 min-h-0 pr-4 custom-scrollbar">
             {activeTab === 'general' && (
               <AgentFormGeneral
                 agent={agentData}
@@ -140,7 +140,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
         </form>
       </div>
       {/* Agente Chat */}
-      <div className="w-full md:w-1/3 lg:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-6 flex flex-col">
+      <div className="w-1/3 border border-gray-200 rounded-lg p-4 flex flex-col min-h-0">
         <AgentChat agent={agentData} />
       </div>
     </div>
