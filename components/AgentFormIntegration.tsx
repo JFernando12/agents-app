@@ -28,7 +28,7 @@ const AgentFormIntegration = () => {
     'https://3v6r138fh0.execute-api.us-east-1.amazonaws.com/conversation';
 
   return (
-    <div className="space-y-6 text-gray-800">
+    <div className="space-y-6 text-gray-800 max-w-4xl">
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-4">
         <ApiIcon className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
         <div>

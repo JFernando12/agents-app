@@ -7,7 +7,9 @@ class ApiDocuments extends ApiService {
     super();
   }
 
-  getDocuments = async (serviceId: string): Promise<Fuente[]> => {
+  getDocuments = async ({ serviceId }: { serviceId?: string }): Promise<Fuente[]> => {
+    if (!serviceId) throw new Error('serviceId is required');
+    
     const response = await this.api.get(`/documents?service_id=${serviceId}`);
     const data = response.data;
 

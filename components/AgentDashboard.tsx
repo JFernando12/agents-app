@@ -5,41 +5,31 @@ import AgentList from "./AgentList";
 import { PlusIcon } from "./icons";
 import Modal from "./Modal";
 import AgentForm from "./AgentForm";
-import { apiAgents } from "@/lib/api/agents";
+import {
+  useCreateAgent,
+  useDeleteAgent,
+  useUpdateAgent,
+} from "@/lib/hools/useAgents";
+import ModalDelete from "./ModalDelete";
 
-const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
+const AgentDashboard = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [agents, setAgents] = useState<Agent[]>(initialAgents);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
+  const [agentToDelete, setAgentToDelete] = useState<Agent | null>(null);
 
-  const handleSaveNew = async (newAgent: Agent | Omit<Agent, 'id'>) => {
-    console.log('Create:: ', newAgent);
-    const response = await apiAgents.createAgent(newAgent as Omit<Agent, 'id'>);
-    const data = response;
-    console.log('Created Agent:', data);
-    setAgents((prev) => [...prev, data]);
-    setIsCreateModalOpen(false);
-  };
+  const createAgent = useCreateAgent();
+  const updateAgent = useUpdateAgent();
+  const deleteAgent = useDeleteAgent();
 
-  const handleSaveEdit = async (newAgent: Agent | Omit<Agent, 'id'>) => {
-    console.log('Edit:: ', newAgent);
-    if (!('id' in newAgent)) return;
-
-    const response = await apiAgents.updateAgent(newAgent.id, newAgent as Omit<Agent, 'id'>);
-    const data = response;
-    console.log('Updated Agent:', data);
-
-    setAgents((prev) =>
-      prev.map((agent) => (agent.id === data.id ? data : agent))
-    );
-
-    setIsEditModalOpen(false);
-    setSelectedAgent(null);
-  };
-
-  const onCreate = () => {
+  const handleCreate = () => {
     setIsCreateModalOpen(true);
+  };
+
+  const handleSaveCreate = async (newAgent: Agent | Omit<Agent, "id">) => {
+    await createAgent.mutateAsync(newAgent as Omit<Agent, "id">);
+    setIsCreateModalOpen(false);
   };
 
   const handleEdit = (agent: Agent) => {
@@ -47,23 +37,46 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
     setSelectedAgent(agent);
   };
 
+  const handleSaveEdit = async (newAgent: Agent | Omit<Agent, "id">) => {
+    if (!("id" in newAgent)) return;
+
+    await updateAgent.mutateAsync({
+      id: newAgent.id,
+      agentData: newAgent as Omit<Agent, "id">,
+    });
+
+    setIsEditModalOpen(false);
+    setSelectedAgent(null);
+  };
+
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedAgent(null);
   };
 
-  const handleDelete = (agent: Agent) => {
-    console.log("Delete", agent.id);
-    // Aquí puedes agregar la lógica para eliminar el agente
+  const handleDelete = async (agent: Agent) => {
+    setIsDeleteModalOpen(true);
+    setAgentToDelete(agent);
+  };
+
+  const handleSaveDelete = async () => {
+    if (!agentToDelete) return;
+    await deleteAgent.mutateAsync(agentToDelete.id);
+    handleCloseDeleteModal();
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setAgentToDelete(null);
   };
 
   return (
     <div className="bg-white rounded-xl shadow-lg h-full">
-      <div className="sticky top-24 z-10 bg-white px-6 pt-6 pb-6">
+      <div className="bg-white px-6 py-4">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl text-gray-600">Todos los agentes</h2>
           <button
-            onClick={onCreate}
+            onClick={handleCreate}
             className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <PlusIcon className="w-5 h-5 mr-2" />
@@ -71,7 +84,7 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
           </button>
         </div>
       </div>
-      <AgentList agents={agents} onEdit={handleEdit} onDelete={handleDelete} />
+      <AgentList onEdit={handleEdit} onDelete={handleDelete} />
       {/* Modal de Creacion de Agente */}
       <Modal
         isOpen={isCreateModalOpen}
@@ -80,8 +93,9 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
       >
         <AgentForm
           agentToEdit={null}
-          onSave={handleSaveNew}
+          onSave={handleSaveCreate}
           onCancel={() => setIsCreateModalOpen(false)}
+          isLoading={createAgent.isPending}
         />
       </Modal>
       {/* Modal de editar Agente */}
@@ -94,8 +108,16 @@ const AgentDashboard = ({ initialAgents }: { initialAgents: Agent[] }) => {
           agentToEdit={selectedAgent}
           onSave={handleSaveEdit}
           onCancel={handleCloseEditModal}
+          isLoading={updateAgent.isPending}
         />
       </Modal>
+      {/* Modal de eliminar Agente */}
+      <ModalDelete
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onSave={handleSaveDelete}
+        isLoading={deleteAgent.isPending}
+      />
     </div>
   );
 };

@@ -22,7 +22,6 @@ const modelOptions = [
   'claude-3.5-haiku',
   'claude-3.7-sonnet',
   'claude-4-sonnet',
-  'claude-4.5-sonnet',
 ];
 
 interface AgentFormGeneralProps {

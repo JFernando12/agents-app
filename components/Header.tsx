@@ -3,11 +3,11 @@ import { CpaVisionIcon, SearchIcon } from "./icons";
 const Header: React.FC = () => {
   return (
     <header className="bg-[#232A37] text-white shadow-md sticky top-0 z-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
+      <div className="mx-auto px-8">
+        <div className="flex items-center justify-between h-18">
           <div className="flex items-center">
             <CpaVisionIcon className="h-12 w-12 mr-4" />
-            <h1 className="text-4xl font-bold uppercase text-white">
+            <h1 className="text-2xl font-bold uppercase text-white">
               CPA Vision IA
             </h1>
           </div>

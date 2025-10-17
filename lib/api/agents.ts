@@ -9,7 +9,6 @@ class ApiAgents extends ApiService {
   getAgents = async (): Promise<Agent[]> => {
     const response = await this.api.get("/services");
     const data = response.data;
-    console.log('Fetched agents data:', data);
     const formattedData = data.services.map((service: any) => ({
       id: service.id,
       name: service.name,
@@ -57,7 +56,7 @@ class ApiAgents extends ApiService {
     return formattedData;
   };
 
-  updateAgent = async (id: string, agentData: Omit<Agent, "id">): Promise<Agent> => {
+  updateAgent = async ({ id, agentData }: { id: string, agentData: Omit<Agent, "id">}): Promise<Agent> => {
     const bodyFormatted = {
       name: agentData.name,
       description: agentData.description,
@@ -87,6 +86,10 @@ class ApiAgents extends ApiService {
     };
 
     return formattedData;
+  };
+
+  deleteAgent = async (id: string): Promise<void> => {
+    await this.api.delete(`/service/${id}`);
   };
 }
 

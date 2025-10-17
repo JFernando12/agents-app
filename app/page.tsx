@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import TabsLayout from "@/components/TabsLayout";
 import { apiAgents } from "@/lib/api/agents";
+import { useAgents } from "@/lib/hools/useAgents";
 import { LogEntry } from "@/types";
 
 const initialChangelog: LogEntry[] = [
@@ -53,15 +54,12 @@ const initialChangelog: LogEntry[] = [
 ];
 
 export default async function Home() {
-  const agents = await apiAgents.getAgents();
-
   return (
     <div className="min-h-screen bg-[#F7F8FA]">
       <Header />
 
-      <main className="p-8">
+      <main className="px-8 py-4">
         <TabsLayout
-          initialAgents={agents}
           initialChangelog={initialChangelog}
         />
       </main>
