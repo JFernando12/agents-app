@@ -123,9 +123,9 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                 ))
               ) : (
                 <div className="text-gray-400 text-sm text-center py-4">
-                  No hay documentos
-                  {documentTab === 'oficial' ? 'oficiales' : 'internos'}{' '}
-                  disponibles
+                  {documentTab === 'oficial'
+                    ? 'No hay documentos oficiales disponibles'
+                    : 'No hay documentos internos disponibles'}
                 </div>
               )}
             </div>

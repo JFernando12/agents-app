@@ -28,7 +28,7 @@ const AgentFormIntegration = ({ agentId }: AgentFormIntegrationProps) => {
     2
   );
 
-  const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/converse`;
+  const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/conversation`;
 
   return (
     <div className="space-y-6 text-gray-800 max-w-4xl">
