@@ -13,8 +13,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4">
         <div className="bg-white rounded-xl shadow-2xl flex flex-col animate-fade-in-up overflow-hidden">
-          <div className="p-4 sm:p-6 bg-[#232A37] flex justify-center items-center flex-shrink-0 relative">
-            <h2 className="text-xl sm:text-2xl font-bold text-white font-oswald uppercase">
+          <div className="p-4 bg-[#232A37] flex justify-center items-center flex-shrink-0 relative">
+            <h2 className="text-xl font-bold text-white font-oswald uppercase">
               {title}
             </h2>
             <button
@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
               </svg>
             </button>
           </div>
-          <div className="p-4 sm:p-6 flex-1 overflow-hidden">{children}</div>
+          <div className="p-4 flex-1 overflow-hidden">{children}</div>
         </div>
         <style>{`
                 @keyframes fade-in-up {

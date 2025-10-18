@@ -90,29 +90,29 @@ const AgentForm: React.FC<AgentFormProps> = ({
       <div className="flex flex-col min-h-0">
         <form onSubmit={handleSubmit} className="flex flex-col h-full w-3xl">
           {agentToEdit && (
-            <div className="flex-shrink-0 flex space-x-2 mb-4 border-b pb-4">
-              {(["general", "fuentes", "integracion"] as const).map((tab) => (
+            <div className="flex-shrink-0 flex space-x-2 mb-2 border-b pb-2">
+              {(['general', 'fuentes', 'integracion'] as const).map((tab) => (
                 <button
                   key={tab}
                   type="button"
                   onClick={() => setActiveTab(tab)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize ${
                     activeTab === tab
-                      ? "bg-[#232A37] text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? 'bg-[#232A37] text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  {tab === "fuentes"
-                    ? "Fuentes"
-                    : tab === "integracion"
-                    ? "Integración"
-                    : "General"}
+                  {tab === 'fuentes'
+                    ? 'Fuentes'
+                    : tab === 'integracion'
+                    ? 'Integración'
+                    : 'General'}
                 </button>
               ))}
             </div>
           )}
 
-          {activeTab === "general" && (
+          {activeTab === 'general' && (
             <div className="flex-1 overflow-y-auto mb-4 pr-4 custom-scrollbar min-h-0">
               <AgentFormGeneral
                 agent={agentData}
@@ -121,9 +121,9 @@ const AgentForm: React.FC<AgentFormProps> = ({
               />
             </div>
           )}
-          {activeTab === "fuentes" && <AgentFormSources agent={agentToEdit} />}
+          {activeTab === 'fuentes' && <AgentFormSources agent={agentToEdit} />}
 
-          {activeTab === "integracion" && (
+          {activeTab === 'integracion' && (
             <div className="flex-1 overflow-y-auto mb-4 pr-4 custom-scrollbar min-h-0">
               <AgentFormIntegration />)
             </div>
@@ -143,7 +143,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center"
             >
               {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isLoading ? "Guardando..." : "Guardar Cambios"}
+              {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
         </form>
