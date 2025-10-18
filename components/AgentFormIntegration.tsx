@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { ApiIcon, CopyIcon } from './icons';
 
-const AgentFormIntegration = () => {
+interface AgentFormIntegrationProps {
+  agentId?: string;
+}
+
+const AgentFormIntegration = ({ agentId }: AgentFormIntegrationProps) => {
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>(
     {}
   );
@@ -16,16 +20,15 @@ const AgentFormIntegration = () => {
 
   const requestExample = JSON.stringify(
     {
-      question: 'Explicame en que consiste el Dashboard',
+      message: 'Explicame en que consiste el Dashboard',
       username: 'user1',
-      service_id: '00134dc1-3ba4-4957-a979-643d64dd7860',
+      service_id: agentId,
     },
     null,
     2
   );
 
-  const endpoint =
-    'https://3v6r138fh0.execute-api.us-east-1.amazonaws.com/conversation';
+  const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/converse`;
 
   return (
     <div className="space-y-6 text-gray-800 max-w-4xl">
@@ -92,7 +95,7 @@ const AgentFormIntegration = () => {
             </thead>
             <tbody className="divide-y">
               <tr className="bg-white">
-                <td className="p-3 font-mono">question</td>
+                <td className="p-3 font-mono">message</td>
                 <td className="p-3">string</td>
                 <td className="p-3 text-green-600 font-semibold">Yes</td>
                 <td className="p-3">

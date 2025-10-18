@@ -7,9 +7,13 @@ class ApiDocuments extends ApiService {
     super();
   }
 
-  getDocuments = async ({ serviceId }: { serviceId?: string }): Promise<Fuente[]> => {
+  getDocuments = async ({
+    serviceId,
+  }: {
+    serviceId?: string;
+  }): Promise<Fuente[]> => {
     if (!serviceId) throw new Error('serviceId is required');
-    
+
     const response = await this.api.get(`/documents?service_id=${serviceId}`);
     const data = response.data;
 
@@ -56,6 +60,17 @@ class ApiDocuments extends ApiService {
         'Content-Type': file.type,
       },
     });
+  };
+
+  getDocumentPresignedUrl = async ({
+    documentId,
+  }: {
+    documentId: string;
+  }): Promise<string> => {
+    const response = await this.api.get(`/document/${documentId}`);
+    const doc = response.data.document;
+    console.log('Document fetched:', doc);
+    return doc.presigned_url;
   };
 }
 

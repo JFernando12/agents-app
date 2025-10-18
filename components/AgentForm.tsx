@@ -125,7 +125,7 @@ const AgentForm: React.FC<AgentFormProps> = ({
 
           {activeTab === 'integracion' && (
             <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar min-h-0">
-              <AgentFormIntegration />)
+              <AgentFormIntegration agentId={agentToEdit?.id} />)
             </div>
           )}
 

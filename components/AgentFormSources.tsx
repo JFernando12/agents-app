@@ -1,8 +1,9 @@
 import { useMemo, useRef, useState } from 'react';
-import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from './icons';
+import { PencilIcon, UploadIcon } from './icons';
 import { Agent, Fuente } from '@/types';
 import { useDocuments, useUploadDocument } from '@/lib/hools/useDocuments';
 import { Loader2 } from 'lucide-react';
+import DocumentItem from './DocumentItem';
 
 interface AgentFormSourcesProps {
   agent: Agent | null;
@@ -14,7 +15,10 @@ const formControlClass =
 
 const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const [activeTab, setActiveTab] = useState<'subir' | 'detalle'>('subir');
-  const [selectedFuenteId, setSelectedFuenteId] = useState<number | null>(null);
+  const [documentTab, setDocumentTab] = useState<'oficial' | 'interno'>(
+    'oficial'
+  );
+  const [selectedFuenteId, setSelectedFuenteId] = useState<string | null>(null);
   const [newFileData, setNewFileData] = useState<{
     file: File;
     name: string;
@@ -31,6 +35,10 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const selectedFuente = useMemo(() => {
     return documents?.find((f) => f.id === selectedFuenteId) || null;
   }, [selectedFuenteId, documents]);
+
+  const filteredDocuments = useMemo(() => {
+    return documents?.filter((doc) => doc.category === documentTab) || [];
+  }, [documents, documentTab]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!agent?.id) return;
@@ -61,63 +69,65 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
     setNewFileData(null);
   };
 
-  const handleSelectFuente = (fuenteId: number) => {
+  const handleSelectFuente = (fuenteId: string) => {
     setSelectedFuenteId(fuenteId);
     setActiveTab('detalle');
   };
 
-  const renderFuenteItem = (fuente: Fuente) => (
-    <div
-      key={fuente.id.toString()}
-      onClick={() => handleSelectFuente(fuente.id)}
-      className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
-        selectedFuenteId === fuente.id
-          ? 'bg-[#374151] text-white'
-          : 'hover:bg-[#2d3748]'
-      }`}
-    >
-      <span className="truncate text-sm">{fuente.name}</span>
-      <div className="flex items-center space-x-2 flex-shrink-0">
-        <button
-          type="button"
-          className="p-1 hover:text-blue-400"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <EyeIcon className="w-4 h-4" />
-        </button>
-        <div onClick={(e) => e.stopPropagation()} className="flex items-center">
-          <button
-            type="button"
-            className={`${
-              fuente.active ? 'bg-blue-600' : 'bg-gray-600'
-            } relative inline-flex items-center h-4 rounded-full w-8 transition-colors`}
-          >
-            <span
-              className={`${
-                fuente.active ? 'translate-x-5' : 'translate-x-1'
-              } inline-block w-3 h-3 transform bg-white rounded-full transition-transform`}
-            />
-          </button>
-        </div>
-        <button
-          type="button"
-          className="p-1 hover:text-red-500"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <TrashIcon className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="flex-1 mb-4 pr-4 min-h-0 flex flex-col h-full overflow-hidden">
+    <div className="flex-1 mb-4 min-h-0 flex flex-col h-full overflow-hidden">
       <div className="flex gap-4 flex-1 min-h-0 overflow-hidden">
         <div className="w-1/2 flex flex-col min-h-0 h-full overflow-hidden">
-          <div className="bg-[#232A37] text-white p-3 rounded-lg flex flex-col flex-1 min-h-0 h-full overflow-hidden">
-            <h4 className="font-bold text-md mb-2">Documentos</h4>
+          <div className="bg-[#232A37] text-white p-4 rounded-lg flex flex-col flex-1 min-h-0 h-full overflow-hidden">
+            {/* Document Category Tabs */}
+            <div className="flex gap-6 mb-3">
+              <button
+                type="button"
+                onClick={() => setDocumentTab('oficial')}
+                className={`pb-2 px-1 text-sm font-medium transition-all duration-200 relative ${
+                  documentTab === 'oficial'
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                Documentos Oficiales
+                {documentTab === 'oficial' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDocumentTab('interno')}
+                className={`pb-2 px-1 text-sm font-medium transition-all duration-200 relative ${
+                  documentTab === 'interno'
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                Documentos Internos
+                {documentTab === 'interno' && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"></span>
+                )}
+              </button>
+            </div>
+
             <div className="space-y-1 overflow-y-auto flex-1 min-h-0 pr-1">
-              {documents?.map(renderFuenteItem)}
+              {filteredDocuments.length > 0 ? (
+                filteredDocuments.map((fuente) => (
+                  <DocumentItem
+                    key={fuente.id}
+                    fuente={fuente}
+                    selectedFuenteId={selectedFuenteId}
+                    handleSelectFuente={handleSelectFuente}
+                  />
+                ))
+              ) : (
+                <div className="text-gray-400 text-sm text-center py-4">
+                  No hay documentos
+                  {documentTab === 'oficial' ? 'oficiales' : 'internos'}{' '}
+                  disponibles
+                </div>
+              )}
             </div>
           </div>
         </div>

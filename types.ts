@@ -22,9 +22,9 @@ export interface Agent {
 }
 
 export type Fuente = {
-  id: number;
+  id: string;
   name: string;
-  category: "oficial" | "interno";
+  category: 'oficial' | 'interno';
   active: boolean;
   lastUpdated: string;
   medio: string;
