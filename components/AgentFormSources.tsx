@@ -9,7 +9,7 @@ interface AgentFormSourcesProps {
 
 const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
 const formControlClass =
-  'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232A37] text-gray-700';
+  'w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232A37] text-gray-700 text-sm';
 
 const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const [activeTab, setActiveTab] = useState<'subir' | 'detalle'>('subir');
@@ -183,7 +183,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                     <input
                       type="text"
                       value={newFileData.name}
-                      className="w-full bg-gray-100 p-2 rounded border border-gray-300 text-gray-700"
+                      className="w-full bg-gray-100 p-2 rounded border border-gray-300 text-gray-700 text-sm py-1"
                       onChange={(e) =>
                         setNewFileData((d) =>
                           d ? { ...d, name: e.target.value } : null
@@ -192,8 +192,9 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>Categoría</label>
                     <div className="flex space-x-4">
+                      <label className={labelClass}>Categoría</label>
+
                       <label>
                         <input
                           type="radio"
@@ -209,7 +210,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                           }
                           className="mr-1"
                         />
-                        <p className="inline text-gray-700">Oficial</p>
+                        <p className="inline text-gray-700 text-sm">Oficial</p>
                       </label>
                       <label>
                         <input
@@ -226,7 +227,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                           }
                           className="mr-1"
                         />
-                        <p className="inline text-gray-700">Interno</p>
+                        <p className="inline text-gray-700 text-sm">Interno</p>
                       </label>
                     </div>
                   </div>
