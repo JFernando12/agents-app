@@ -177,7 +177,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
           {newFileData && activeTab === 'subir' && (
             <div className="flex justify-center items-center border border-gray-300 rounded-lg w-full">
               <div className="bg-white rounded-lg p-4 w-full">
-                <div className="space-y-3 w-full">
+                <div className="space-y-2 w-full">
                   <div>
                     <label className={labelClass}>Nombre del archivo</label>
                     <input
@@ -192,7 +192,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                     />
                   </div>
                   <div>
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-4 mt-4">
                       <label className={labelClass}>Categoría</label>
 
                       <label>
@@ -257,18 +257,18 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                       className={formControlClass}
                     />
                   </div>
-                  <div className="flex justify-center space-x-2 pt-3">
+                  <div className="flex justify-center space-x-2">
                     <button
                       onClick={() => setNewFileData(null)}
-                      className="px-4 py-2 bg-gray-200 rounded text-gray-800"
+                      className="px-3 py-2 bg-gray-200 rounded text-gray-800 text-sm"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleSaveNewFuente}
-                      className="px-4 py-1 bg-green-600 text-white rounded"
+                      className="px-3 py-1 bg-green-600 text-white rounded text-sm"
                     >
-                      Guardar
+                      Subir Archivo
                     </button>
                   </div>
                 </div>
