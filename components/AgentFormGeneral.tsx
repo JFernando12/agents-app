@@ -41,10 +41,10 @@ const AgentFormGeneral = ({
 }: AgentFormGeneralProps) => {
   const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
   const formControlClass =
-    'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232A37] text-gray-700';
+    'w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#232A37] text-gray-700';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-4 p-2">
       <div>
         <label htmlFor="name" className={labelClass}>
           Nombre del Agente

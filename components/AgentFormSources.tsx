@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { EyeIcon, PencilIcon, TrashIcon, UploadIcon } from './icons';
 import { Agent, Fuente } from '@/types';
 import { useDocuments, useUploadDocument } from '@/lib/hools/useDocuments';
+import { Loader2 } from 'lucide-react';
 
 interface AgentFormSourcesProps {
   agent: Agent | null;
@@ -9,7 +10,7 @@ interface AgentFormSourcesProps {
 
 const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
 const formControlClass =
-  'w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232A37] text-gray-700 text-sm';
+  'w-full px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#232A37] text-gray-700 text-sm';
 
 const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
   const [activeTab, setActiveTab] = useState<'subir' | 'detalle'>('subir');
@@ -183,7 +184,7 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                     <input
                       type="text"
                       value={newFileData.name}
-                      className="w-full bg-gray-100 p-2 rounded border border-gray-300 text-gray-700 text-sm py-1"
+                      className={formControlClass}
                       onChange={(e) =>
                         setNewFileData((d) =>
                           d ? { ...d, name: e.target.value } : null
@@ -259,16 +260,23 @@ const AgentFormSources = ({ agent }: AgentFormSourcesProps) => {
                   </div>
                   <div className="flex justify-center space-x-2">
                     <button
+                      type="button"
                       onClick={() => setNewFileData(null)}
-                      className="px-3 py-2 bg-gray-200 rounded text-gray-800 text-sm"
+                      className="px-3 py-2 bg-gray-200 rounded-lg text-gray-800 text-sm hover:bg-gray-300 transition-colors"
                     >
                       Cancelar
                     </button>
                     <button
+                      type="button"
                       onClick={handleSaveNewFuente}
-                      className="px-3 py-1 bg-green-600 text-white rounded text-sm"
+                      className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors flex items-center gap-2 justify-center"
                     >
-                      Subir Archivo
+                      {uploadDocument.isPending && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
+                      {uploadDocument.isPending
+                        ? 'Subiendo Archivo...'
+                        : 'Subir Archivo'}
                     </button>
                   </div>
                 </div>

@@ -12,9 +12,13 @@ export const useUploadDocument = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: apiDocuments.uploadDocument,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["documents"] });
-        }
-    })
+      mutationFn: apiDocuments.uploadDocument,
+      onSuccess: (_, variables) => {
+        // Solo invalida los documentos del servicio específico
+        queryClient.invalidateQueries({
+          queryKey: ['documents', variables.serviceId],
+          exact: true,
+        });
+      },
+    });
 }
